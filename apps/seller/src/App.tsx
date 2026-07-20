@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Routes, Route, Link } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import { Package, BarChart3, MessageSquare, Settings, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="flex min-h-screen bg-background text-white font-sans selection:bg-accent-green selection:text-white">
+      {/* Sidebar */}
+      <motion.aside 
+        initial={{ x: -300 }}
+        animate={{ x: 0 }}
+        className="w-64 border-r border-white/10 bg-surface/50 backdrop-blur-xl flex flex-col p-4"
+      >
+        <div className="mb-8 px-2 pt-2">
+          <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-green to-teal-400">
+            MediCycle
+          </h2>
+          <p className="text-xs text-gray-400">Seller Portal</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+        
+        <nav className="flex-1 space-y-2">
+          <SidebarLink to="/" icon={<BarChart3 size={18} />} label="Dashboard" />
+          <SidebarLink to="/inventory" icon={<Package size={18} />} label="Inventory" />
+          <SidebarLink to="/messages" icon={<MessageSquare size={18} />} label="Messages" />
+          <SidebarLink to="/settings" icon={<Settings size={18} />} label="Settings" />
+        </nav>
+        
+        <div className="mt-auto border-t border-white/10 pt-4">
+          <SidebarLink to="/logout" icon={<LogOut size={18} />} label="Logout" />
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </motion.aside>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          {/* Add other routes later */}
+        </Routes>
+      </main>
+    </div>
+  );
 }
 
-export default App
+function SidebarLink({ to, icon, label }: { to: string, icon: React.ReactNode, label: string }) {
+  // Mocking active state for "/"
+  const isActive = to === "/";
+  return (
+    <Link 
+      to={to} 
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+        isActive ? 'bg-accent-green/20 text-accent-green' : 'text-gray-400 hover:text-white hover:bg-white/5'
+      }`}
+    >
+      {icon} <span className="font-medium">{label}</span>
+    </Link>
+  );
+}
+
+export default App;

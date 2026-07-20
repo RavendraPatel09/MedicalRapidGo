@@ -1,6 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
+import Marketplace from './pages/Marketplace';
+import Cart from './pages/Cart';
+import Chat from './pages/Chat';
 
 function App() {
   return (
@@ -8,7 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<Auth />} />
-        {/* Marketplace routes will go here */}
+        <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </div>
   );
