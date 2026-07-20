@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-white font-sans antialiased selection:bg-accent-blue selection:text-white;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-surface/50 backdrop-blur-md border border-white/10 shadow-glass;
+  }
+  
+  .glass-card {
+    @apply bg-surfaceLighter/60 backdrop-blur-xl border border-white/5 rounded-DEFAULT shadow-glass;
+  }
+}
