@@ -13,7 +13,12 @@
     "react": "18",
     "react-dom": "18",
     "react-router-dom": "^7.18.1",
-    "recharts": "^3.9.2"
+    "recharts": "^3.9.2",
+    "@medicycle/ui": "*",
+    "@medicycle/theme": "*",
+    "@medicycle/utils": "*",
+    "@medicycle/store": "*",
+    "@medicycle/types": "*"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
