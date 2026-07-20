@@ -1,5 +1,6 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
+import AddMedicine from './pages/AddMedicine';
 import { Package, BarChart3, MessageSquare, Settings, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -35,7 +36,7 @@ function App() {
       <main className="flex-1 overflow-y-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          {/* Add other routes later */}
+          <Route path="/inventory/add" element={<AddMedicine />} />
         </Routes>
       </main>
     </div>
@@ -43,8 +44,8 @@ function App() {
 }
 
 function SidebarLink({ to, icon, label }: { to: string, icon: React.ReactNode, label: string }) {
-  // Mocking active state for "/"
-  const isActive = to === "/";
+  const location = useLocation();
+  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
   return (
     <Link 
       to={to} 
