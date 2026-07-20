@@ -4,6 +4,8 @@ import Auth from './pages/Auth';
 import Marketplace from './pages/Marketplace';
 import Cart from './pages/Cart';
 import Chat from './pages/Chat';
+import MedicineDetails from './pages/MedicineDetails';
+import Nearby from './pages/Nearby';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/medicine/:id" element={<MedicineDetails />} />
+        <Route path="/nearby" element={<Nearby />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/chat" element={<Chat />} />
       </Routes>
