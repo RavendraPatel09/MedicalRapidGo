@@ -6,6 +6,7 @@ import Cart from './pages/Cart';
 import Chat from './pages/Chat';
 import MedicineDetails from './pages/MedicineDetails';
 import Nearby from './pages/Nearby';
+import Orders from './pages/Orders';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/medicine/:id" element={<MedicineDetails />} />
         <Route path="/nearby" element={<Nearby />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/chat" element={<Chat />} />
       </Routes>
