@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediCycle | Future of Safe Medicine Exchange</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,900,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#adc6ff",
+                    "surface-container-highest": "#32353c",
+                    "inverse-surface": "#e1e2ec",
+                    "on-tertiary-container": "#461f00",
+                    "on-background": "#e1e2ec",
+                    "background": "#10131a",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-secondary-container": "#c4abff",
+                    "outline-variant": "#424754",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "inverse-on-surface": "#2e3038",
+                    "tertiary-container": "#df7412",
+                    "on-tertiary": "#502400",
+                    "secondary-fixed-dim": "#d0bcff",
+                    "on-primary-fixed": "#001a42",
+                    "tertiary": "#ffb786",
+                    "on-primary-container": "#00285d",
+                    "surface-container-low": "#191b23",
+                    "outline": "#8c909f",
+                    "surface-container-lowest": "#0b0e15",
+                    "surface-tint": "#adc6ff",
+                    "on-primary": "#002e6a",
+                    "surface-variant": "#32353c",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "primary-fixed-dim": "#adc6ff",
+                    "inverse-primary": "#005ac2",
+                    "surface-bright": "#363941",
+                    "primary-container": "#4d8eff",
+                    "on-surface": "#e1e2ec",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#3c0091",
+                    "on-error": "#690005",
+                    "surface-container": "#1d2027",
+                    "surface-dim": "#10131a",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-container": "#571bc1",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#d0bcff",
+                    "on-tertiary-fixed": "#311400",
+                    "on-secondary-fixed-variant": "#5516be",
+                    "secondary-fixed": "#e9ddff",
+                    "on-primary-fixed-variant": "#004395",
+                    "surface-container-high": "#272a31",
+                    "on-secondary-fixed": "#23005c",
+                    "surface": "#10131a",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "card": "20px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "xl": "32px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "unit": "8px",
+                    "lg": "24px",
+                    "container-max": "1280px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "xxl": "64px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Satoshi"],
+                    "body-lg": ["Inter"],
+                    "display-lg-mobile": ["Satoshi"],
+                    "display-lg": ["Satoshi"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Satoshi"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    display: inline-block;
+    line-height: 1
+    }
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.05;
+    z-index: 9999;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDOwCxJUcFSs7tDAL8Vo47_d8hYWzIsTfNAKJQjg-0Q6Cvakna5FX6Tz_NWK_Yjsw6wBKvbPo-aKg0_9MSiUZljZSOyg7ZjVQTLyhWN1LbTAOu20nYoP-e7jlWyt6hWyuI13ca7QRZJibTSsInPTDGevX_k8H3vVQTuajzlFBpV7VKQ8YnaJ5mqOksqP0yjcoNrQysPic_rECu_Ar-F4Kqin8Q1gg1vLsA-eLBNfOzy75XSCxih_3Sh_N8xdm0-ok0PMtIAMS-FApB6)
+    }
+.glass-card {
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease
+    }
+.glass-card:hover {
+    border-color: rgba(173, 198, 255, 0.3);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+    transform: translatey(-4px)
+    }
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4)
+    }
+.hide-scrollbar::-webkit-scrollbar {
+    display: none
+    }
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none
+    }
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+        } 50% {
+        transform: translateY(-10px);
+        } 100% {
+        transform: translateY(0px);
+        }
+    }
+.float-animation {
+    animation: float 6s ease-in-out infinite
+    }</style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 selection:text-primary">
+<div class="noise-overlay"></div>
+<!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/5 shadow-[0px_10px_30px_rgba(59,130,246,0.15)]">
+<div class="flex justify-between items-center px-lg py-sm max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">MediCycle</span>
+<div class="hidden md:flex items-center bg-surface-container-low rounded-full px-md py-xs border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48 text-on-surface" placeholder="Search marketplace..." type="text"/>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md transition-all" href="#">Buyer</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#">Seller</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#">Admin</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all active:scale-95">shopping_cart</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all active:scale-95">account_circle</button>
+<button class="md:hidden material-symbols-outlined text-on-surface-variant">menu</button>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full opacity-60" -->
+<div class="absolute inset-0 w-full h-full opacity-60" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+    
+    // Create a flowing gradient mesh effect
+    float t = u_time * 0.2;
+    
+    vec3 color1 = vec3(0.043, 0.067, 0.125); // #0B1120
+    vec3 color2 = vec3(0.231, 0.510, 0.965); // #3B82F6
+    vec3 color3 = vec3(0.545, 0.361, 0.965); // #8B5CF6
+    
+    float noise = sin(p.x * 2.0 + t) * cos(p.y * 2.0 - t) * 0.5 + 0.5;
+    noise += sin(p.y * 4.0 + t * 1.5) * 0.2;
+    
+    vec3 finalColor = mix(color1, color2, noise * 0.3);
+    finalColor = mix(finalColor, color3, pow(noise, 3.0) * 0.2);
+    
+    // Add a subtle vignette
+    float vignette = 1.0 - length(p * 0.5);
+    finalColor *= smoothstep(0.0, 1.0, vignette);
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="absolute inset-0 bg-gradient-to-b from-background/0 via-background/40 to-background"></div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-mobile text-center">
+<div class="inline-flex items-center gap-sm bg-primary/10 border border-primary/20 rounded-full px-md py-xs mb-xl float-animation">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-label-md font-label-md text-primary tracking-widest uppercase">Verified Ecosystem</span>
+</div>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-md max-w-4xl mx-auto leading-tight">
+                    The Future of <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">Safe Medicine Exchange</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-xxl opacity-90">
+                    A premium, verified marketplace for unopened and unexpired medications. Secure, clinical, and fast.
+                </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-md">
+<button class="bg-primary text-on-primary-container px-xxl py-md rounded-full font-headline-sm text-headline-sm hover-glow transition-all active:scale-95 flex items-center gap-sm">
+                        Explore Marketplace
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-on-surface px-xxl py-md rounded-full font-headline-sm text-headline-sm hover:bg-surface-container-highest transition-all border border-outline-variant/30">
+                        How it works
+                    </button>
+</div>
+</div>
+<!-- Subtle background scroll indicator -->
+<div class="absolute bottom-xl left-1/2 -translate-x-1/2 flex flex-col items-center gap-sm opacity-40">
+<span class="text-label-md font-label-md">SCROLL</span>
+<div class="w-px h-12 bg-gradient-to-b from-primary to-transparent"></div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="py-xxl max-w-container-max mx-auto px-margin-mobile">
+<div class="text-center mb-xxl">
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Uncompromising Quality</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Built on the pillars of precision and trust.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Card 1 -->
+<div class="glass-card p-lg rounded-card group">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">Verified Sellers</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Every provider undergoes a rigorous 5-step background and license validation process.</p>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-lg rounded-card group">
+<div class="w-12 h-12 bg-tertiary/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-tertiary/20 transition-colors">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">document_scanner</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">OCR Scanning</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Advanced pharmaceutical OCR technology verifies expiration dates and batch numbers instantly.</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-lg rounded-card group">
+<div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">Fast Delivery</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Cold-chain logistics ensure your medicine maintains clinical integrity from door to door.</p>
+</div>
+<!-- Card 4 -->
+<div class="glass-card p-lg rounded-card group">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">Secure Payments</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Encrypted escrow systems protect every transaction until the product is safely in your hands.</p>
+</div>
+</div>
+</section>
+<!-- Marketplace Preview -->
+<section class="py-xxl bg-surface-container-lowest/50">
+<div class="max-w-container-max mx-auto px-margin-mobile flex justify-between items-end mb-lg">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-xs">Available Near You</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time inventory from verified neighbors and pharmacies.</p>
+</div>
+<button class="text-primary font-bold flex items-center gap-xs hover:gap-sm transition-all">
+                    View all <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<div class="flex gap-lg overflow-x-auto px-margin-mobile pb-xl hide-scrollbar snap-x">
+<!-- Product Card 1 -->
+<div class="min-w-[280px] md:min-w-[320px] snap-start glass-card overflow-hidden rounded-card">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up high-quality studio photography of a box of premium medicine capsules, clinical aesthetic, sharp focus, soft blue pharmaceutical lighting, dark background, 8k resolution, minimalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQHPECxJTCnVYL9MO4JvYxp5hB6HB7AgJsZepQNDrG1lMd83CP-cs4Yr1SG_ahg7JRaOSAEkN4fD2BBXjnxrSbcLEqQM6CY3qliPU8HnafFwALh0DN-H3DGCKw1WGXhPtkTaNLg_LGGv60OsNJguDVP2NGSDysnYXuMnGHn4XgKJQuuDvEgb3JlJgfsbJuB4ikpXdKl3kFLFyVVY6CKLB-aXTzRen2pHi-LkTrzfAD_B3lGmdCEBJQOC6ew4S_6VLqpxiuJ_jefjO"/>
+<div class="absolute top-md right-md bg-background/80 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">location_on</span>
+<span class="text-label-md font-label-md">1.2 km away</span>
+</div>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline-sm text-headline-sm">Amoxicillin 500mg</h4>
+<span class="text-primary font-bold">$12.50</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md">Exp: Oct 2025 • Sealed Box</p>
+<div class="flex items-center gap-sm">
+<button class="flex-1 bg-primary/10 text-primary py-sm rounded-lg font-bold hover:bg-primary hover:text-on-primary-container transition-all text-body-sm">Add to Cart</button>
+<button class="w-10 h-10 border border-outline-variant rounded-lg flex items-center justify-center hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="min-w-[280px] md:min-w-[320px] snap-start glass-card overflow-hidden rounded-card">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Professional product shot of a medicine syrup bottle, glowing amber liquid, medical label, sleek dark setting, futuristic healthcare aesthetic, high contrast lighting, clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIaZtLlRc8AUTYzixq1FPEDN7c52TeJ2H-l8nXKsp0yqTyowQlnWxASh8Jj3xmtwRsg_C_d_vlJU4QJUxVXy7dD68q-q_xMOWd2zyevsbyHlTUsvBgAGjH_III0MUsJD6x7OxZVnbXeF-Jlv6QulxID5U-a5-dtx9-7fYxQMsxgT3tG9IPU-zBrWeaZK03gXHGu47sqhio-yT1f5J_3K09mgb4psvSWy3v7heNudSRtLO4RwYYw5tjg7R9mrc9ImRM2U80pNzr8aO3"/>
+<div class="absolute top-md right-md bg-background/80 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">location_on</span>
+<span class="text-label-md font-label-md">0.8 km away</span>
+</div>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline-sm text-headline-sm">Lisinopril 10mg</h4>
+<span class="text-primary font-bold">$18.00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md">Exp: Jan 2026 • 30 Tablets</p>
+<div class="flex items-center gap-sm">
+<button class="flex-1 bg-primary/10 text-primary py-sm rounded-lg font-bold hover:bg-primary hover:text-on-primary-container transition-all text-body-sm">Add to Cart</button>
+<button class="w-10 h-10 border border-outline-variant rounded-lg flex items-center justify-center hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="min-w-[280px] md:min-w-[320px] snap-start glass-card overflow-hidden rounded-card">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Modern medical inhaler product photography, matte finish, glowing accent lights, futuristic healthcare design, minimalist layout, luxury medical tech, deep blue and black color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDwRIZvvDijN6VtmSO1Y0IV1dBE7c1Kgbs5RlPzXxIE_XvbNGxiF03IHZi7ZlVClJ4UYiogqRWq9pH2Ia79c3PoLrp9n4TTp50h-ysydkSRZAshaKs6iZsP17ER-pyRcZmlhLxvClOgS8YBEoa_PmmEPdxW9BENtnwac7lA1l6U6jKjXRm626xHl0zVXuD2fbkTUQpBEzSnr_qrZ6yJV806aZ5yrsajunc6u5o-rx2ntgOPXcVZqEf54g7Tzl5ygQBFsjLILNi0-wh"/>
+<div class="absolute top-md right-md bg-background/80 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">location_on</span>
+<span class="text-label-md font-label-md">2.5 km away</span>
+</div>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline-sm text-headline-sm">Albuterol Inhaler</h4>
+<span class="text-primary font-bold">$45.00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md">Exp: Dec 2024 • New in Pack</p>
+<div class="flex items-center gap-sm">
+<button class="flex-1 bg-primary/10 text-primary py-sm rounded-lg font-bold hover:bg-primary hover:text-on-primary-container transition-all text-body-sm">Add to Cart</button>
+<button class="w-10 h-10 border border-outline-variant rounded-lg flex items-center justify-center hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="min-w-[280px] md:min-w-[320px] snap-start glass-card overflow-hidden rounded-card">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Sleek silver blister pack of medicine pills, reflection on dark glass, sharp medical aesthetic, clean blue lighting, high-tech pharmacy product shot, minimalist and futuristic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHW94B59Kc_HLVyCQYTOg22q_Y8r3CdhE9YLOjFlcOV81hrXHmnKONYDqeyhAWvvULOrsvtN44ogmTuD1Rz6SlLWA7o26BwKXkPz3IGDWr7pfeI_Gz4NMQzcjjrgD4bAwRMbKUAJWrbgYStgw-HI0g1vfyzuS52N5sazEcnnDqtsbU523el-q5plhis_JCwWJ_VigDSipums1sfXIoG4qCp1-4GzNtoAdTzS_JLbb7UQi1Qksa1vlzAn8rHNnicYLuicqcHAWN9wgk"/>
+<div class="absolute top-md right-md bg-background/80 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">location_on</span>
+<span class="text-label-md font-label-md">3.1 km away</span>
+</div>
+</div>
+<div class="p-md">
+<div class="flex justify-between items-start mb-xs">
+<h4 class="font-headline-sm text-headline-sm">Metformin 500mg</h4>
+<span class="text-primary font-bold">$9.00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md">Exp: Mar 2025 • 60 Count</p>
+<div class="flex items-center gap-sm">
+<button class="flex-1 bg-primary/10 text-primary py-sm rounded-lg font-bold hover:bg-primary hover:text-on-primary-container transition-all text-body-sm">Add to Cart</button>
+<button class="w-10 h-10 border border-outline-variant rounded-lg flex items-center justify-center hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Section -->
+<section class="py-xxl max-w-container-max mx-auto px-margin-mobile">
+<div class="glass-card rounded-card p-xl md:p-xxl flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+</div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-xl">Trusted by Over</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-xl w-full">
+<div>
+<div class="text-[56px] font-bold text-primary tracking-tighter counter" data-target="10000">0</div>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant">Pharmacies</p>
+</div>
+<div>
+<div class="text-[56px] font-bold text-secondary tracking-tighter counter" data-target="250000">0</div>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant">Verified Transactions</p>
+</div>
+<div>
+<div class="text-[56px] font-bold text-tertiary tracking-tighter counter" data-target="1.2">0</div>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant">M Saved Annually</p>
+</div>
+</div>
+<div class="mt-xxl pt-xl border-t border-outline-variant/30 w-full flex flex-wrap justify-center gap-xl opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<span class="font-headline-md font-bold tracking-widest uppercase italic">FDA COMPLIANT</span>
+<span class="font-headline-md font-bold tracking-widest uppercase italic">TRUSTPILOT 4.9</span>
+<span class="font-headline-md font-bold tracking-widest uppercase italic">ISO 27001</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xxl bg-surface-container-lowest border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg px-margin-mobile md:px-lg max-w-container-max mx-auto">
+<div class="space-y-md">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">MediCycle</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">The world's most secure peer-to-peer pharmaceutical marketplace for unexpired medicine.</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors">public</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors">chat</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors">mail</span>
+</div>
+</div>
+<div class="space-y-sm">
+<h5 class="text-on-surface font-bold font-body-md">Platform</h5>
+<nav class="flex flex-col gap-xs">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">FDA Compliance</a>
+</nav>
+</div>
+<div class="space-y-sm">
+<h5 class="text-on-surface font-bold font-body-md">Resources</h5>
+<nav class="flex flex-col gap-xs">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Shipping Info</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Verification Process</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Refund Policy</a>
+</nav>
+</div>
+<div class="space-y-sm">
+<h5 class="text-on-surface font-bold font-body-md">Connect</h5>
+<nav class="flex flex-col gap-xs">
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Seller Dashboard</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Partner Program</a>
+</nav>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile mt-xxl pt-lg border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-md">
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 MediCycle. Premium Medical Marketplace.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/50">Version 2.4.1 (Stable Build)</p>
+</div>
+</footer>
+<script>
+        // Intersection Observer for Counters
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const duration = 2000;
+                    const start = 0;
+                    const startTime = performance.now();
+
+                    const updateCounter = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const current = progress * target;
+                        
+                        if (target % 1 !== 0) {
+                            counter.innerText = current.toFixed(1) + 'M';
+                        } else {
+                            counter.innerText = Math.floor(current).toLocaleString() + (target >= 1000 ? '+' : '');
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        }
+                    };
+
+                    requestAnimationFrame(updateCounter);
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.counter').forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Horizontal scroll with mouse wheel (optional enhancement)
+        const scrollContainer = document.querySelector('.hide-scrollbar');
+        scrollContainer.addEventListener('wheel', (evt) => {
+            if (evt.deltaY != 0) {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            }
+        });
+    </script>
+</body></html>

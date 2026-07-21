@@ -8,11 +8,14 @@ import MedicineDetails from './pages/MedicineDetails';
 import Nearby from './pages/Nearby';
 import Orders from './pages/Orders';
 
+import Landing from './pages/Landing';
+
 function App() {
   return (
-    <div className="min-h-screen w-full bg-background text-white font-sans selection:bg-accent-blue selection:text-white">
+    <div className="min-h-screen bg-background text-on-background font-sans selection:bg-primary/30 selection:text-primary">
       <Routes>
-        <Route path="/" element={<RoleSelection />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/roles" element={<RoleSelection />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/medicine/:id" element={<MedicineDetails />} />
