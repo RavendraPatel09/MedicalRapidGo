@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import Landing from './pages/Landing';
+import RoleSelection from './pages/RoleSelection';
 import Auth from './pages/Auth';
 import Marketplace from './pages/Marketplace';
 import Cart from './pages/Cart';
@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="min-h-screen w-full bg-background text-white font-sans selection:bg-accent-blue selection:text-white">
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<RoleSelection />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/medicine/:id" element={<MedicineDetails />} />
