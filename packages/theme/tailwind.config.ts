@@ -96,6 +96,15 @@ const config: Config = {
         "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
         "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
         "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+      },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        'glass-sm': '0 4px 16px 0 rgba(31, 38, 135, 0.37)',
+        'neon': '0 0 20px rgba(173, 198, 255, 0.4)',
+        'neon-strong': '0 0 40px rgba(173, 198, 255, 0.6)',
+      },
+      backgroundImage: {
+        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
       }
     },
   },
