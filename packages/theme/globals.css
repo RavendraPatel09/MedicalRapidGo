@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-white font-sans antialiased selection:bg-accent-blue selection:text-white;
+    @apply bg-background text-on-background font-sans antialiased selection:bg-primary/30 selection:text-primary;
   }
 }
 
@@ -14,6 +14,6 @@
   }
   
   .glass-card {
-    @apply bg-surfaceLighter/60 backdrop-blur-xl border border-white/5 rounded-DEFAULT shadow-glass;
+    @apply bg-surface-container/60 backdrop-blur-xl border border-white/5 rounded-DEFAULT shadow-glass;
   }
 }
