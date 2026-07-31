@@ -1,6 +1,6 @@
 import { Card, Button } from '@medicycle/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Users, AlertTriangle, ShieldCheck, Download } from 'lucide-react';
+import { Users, AlertTriangle, ShieldCheck, Download, BarChart as BarChartIcon } from 'lucide-react';
 import { formatCurrency } from '@medicycle/utils';
 import { motion } from 'framer-motion';
 
@@ -29,7 +29,7 @@ export default function Dashboard() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard title="Total Volume (30d)" value={formatCurrency(124500.00)} icon={<BarChart size={20} />} />
+        <StatCard title="Total Volume (30d)" value={formatCurrency(124500.00)} icon={<BarChartIcon size={20} />} />
         <StatCard title="Active Users" value="12,492" icon={<Users size={20} />} />
         <StatCard title="Verified Sellers" value="843" icon={<ShieldCheck size={20} className="text-accent-green" />} />
         <StatCard title="Fraud Alerts" value="12" icon={<AlertTriangle size={20} className="text-accent-orange" />} alert />
