@@ -1,204 +1,324 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, Card, Badge } from "@medicycle/ui";
+import { formatCurrency, formatDate } from "@medicycle/utils";
+import Navbar from "../components/Navbar";
+import {
+  ShoppingBag,
+  Clock,
+  ThermometerSnowflake,
+  Truck,
+  CheckCircle2,
+  FileCheck2,
+  Download,
+  AlertCircle,
+  Building2,
+  ChevronRight,
+  ShieldCheck,
+} from "lucide-react";
 
 export default function Orders() {
-  const [activeTab, setActiveTab] = useState('active');
+  const [activeTab, setActiveTab] = useState<"ACTIVE" | "PAST">("ACTIVE");
+  const [confirmedOrders, setConfirmedOrders] = useState<Record<string, boolean>>({});
+
+  const handleConfirmInspection = (orderId: string) => {
+    setConfirmedOrders((prev) => ({ ...prev, [orderId]: true }));
+  };
+
+  const activeOrders = [
+    {
+      id: "MC-2026-9921",
+      date: "Today, 10:30 AM",
+      seller: "St. Jude Metro Pharmacy",
+      items: [
+        { name: "Amoxicillin & Clavulanate Potassium 500mg", qty: 2, price: 18.50 },
+        { name: "Lantus SoloStar (Insulin Glargine) 100u/mL", qty: 1, price: 68.00 },
+      ],
+      total: 119.50,
+      status: "IN_TRANSIT",
+      stepIndex: 2, // 0: Placed, 1: Packed, 2: In-Transit, 3: Delivered
+      temperature: "4.2°C (Calibrated 2-8°C)",
+      tempStatus: "STABLE",
+      courier: "MediRapid Cold-Chain Van #14",
+      eta: "45 mins (11:45 AM)",
+    },
+    {
+      id: "MC-2026-8810",
+      date: "Yesterday, 2:15 PM",
+      seller: "Apex Health Regional Center",
+      items: [
+        { name: "Lipitor (Atorvastatin Calcium) 20mg", qty: 3, price: 32.00 },
+      ],
+      total: 104.00,
+      status: "DELIVERED",
+      stepIndex: 3,
+      temperature: "21.5°C Room Temp",
+      tempStatus: "STABLE",
+      courier: "Direct Hospital Courier",
+      eta: "Delivered",
+    },
+  ];
+
+  const pastOrders = [
+    {
+      id: "MC-2026-7734",
+      date: "Jun 24, 2026",
+      seller: "CareFirst Clinical Supply",
+      items: [
+        { name: "Metformin Hydrochloride ER 750mg", qty: 4, price: 14.20 },
+      ],
+      total: 64.80,
+      status: "COMPLETED",
+      inspectionApproved: true,
+    },
+    {
+      id: "MC-2026-6652",
+      date: "Jun 10, 2026",
+      seller: "Northwest Medical Alliance",
+      items: [
+        { name: "Ventolin HFA (Albuterol Sulfate) 90mcg", qty: 2, price: 24.50 },
+      ],
+      total: 57.00,
+      status: "COMPLETED",
+      inspectionApproved: true,
+    },
+  ];
+
+  const steps = [
+    { label: "Order Placed", desc: "Escrow Locked" },
+    { label: "Batch Verified", desc: "Pharmacist Packed" },
+    { label: "Cold-Chain Transit", desc: "Live Temp Log" },
+    { label: "Delivered & Inspected", desc: "Escrow Settled" },
+  ];
 
   return (
-    <div className="font-body-md text-body-md bg-background text-[#e1e2ec] min-h-screen overflow-x-hidden flex flex-col selection:bg-primary/30">
-      
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-white/5 pt-lg pb-md shadow-sm">
-        <div className="max-w-container-max mx-auto px-gutter flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button className="w-10 h-10 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
-              <span className="material-symbols-outlined text-on-surface-variant">arrow_back</span>
-            </button>
-            <h1 className="text-headline-sm md:text-headline-md font-bold text-on-surface">Order History</h1>
+    <div className="min-h-screen bg-background text-on-background flex flex-col selection:bg-primary/20">
+      <Navbar />
+
+      <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
+        {/* Header */}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-on-surface flex items-center gap-2">
+              <ShoppingBag size={26} className="text-primary-light" />
+              <span>Medicine Orders & Tracking</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+              Monitor active shipments, verify continuous cold-chain temperature logs, and release escrow funds.
+            </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full border border-outline-variant/30 hover:border-primary transition-all">
-            <span className="material-symbols-outlined text-primary text-[18px]">support_agent</span>
-            <span className="hidden sm:inline font-label-md text-label-md text-on-surface">Help</span>
-          </button>
-        </div>
-      </header>
 
-      <main className="flex-1 max-w-container-max mx-auto px-gutter py-xl w-full">
-        
-        {/* Tabs */}
-        <div className="flex border-b border-outline-variant/20 mb-xl overflow-x-auto scrollbar-hide">
-          <button 
-            onClick={() => setActiveTab('active')}
-            className={`px-6 py-4 font-bold text-label-lg whitespace-nowrap transition-colors relative ${activeTab === 'active' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
-          >
-            Active Orders (2)
-            {activeTab === 'active' && <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full" />}
-          </button>
-          <button 
-            onClick={() => setActiveTab('past')}
-            className={`px-6 py-4 font-bold text-label-lg whitespace-nowrap transition-colors relative ${activeTab === 'past' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
-          >
-            Past Orders
-            {activeTab === 'past' && <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full" />}
-          </button>
-          <button 
-            onClick={() => setActiveTab('cancelled')}
-            className={`px-6 py-4 font-bold text-label-lg whitespace-nowrap transition-colors relative ${activeTab === 'cancelled' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
-          >
-            Cancelled
-            {activeTab === 'cancelled' && <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full" />}
-          </button>
+          {/* Tabs */}
+          <div className="flex items-center bg-surface p-1 rounded-xl border border-surface-border self-start sm:self-auto">
+            <button
+              onClick={() => setActiveTab("ACTIVE")}
+              className={`text-xs px-4 py-2 rounded-lg font-semibold transition-colors ${
+                activeTab === "ACTIVE"
+                  ? "bg-primary text-white"
+                  : "text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              Active Orders (2)
+            </button>
+            <button
+              onClick={() => setActiveTab("PAST")}
+              className={`text-xs px-4 py-2 rounded-lg font-semibold transition-colors ${
+                activeTab === "PAST"
+                  ? "bg-primary text-white"
+                  : "text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              Order History (2)
+            </button>
+          </div>
         </div>
 
-        {activeTab === 'active' && (
-          <div className="space-y-lg">
-            {/* Active Order Card 1 */}
-            <div className="bg-surface-container-lowest border border-white/5 rounded-[24px] overflow-hidden group hover:border-primary/30 transition-all duration-300 shadow-lg">
-              {/* Order Header */}
-              <div className="bg-surface-container/50 px-lg py-md border-b border-outline-variant/20 flex flex-wrap gap-4 items-center justify-between">
-                <div>
-                  <div className="text-on-surface-variant text-label-md font-bold uppercase tracking-widest mb-1">Order #MC-9982-FX</div>
-                  <div className="text-body-sm text-on-surface-variant flex items-center gap-2">
-                    Placed on Oct 12, 2024 <span className="w-1 h-1 bg-outline-variant rounded-full"></span> 3 items <span className="w-1 h-1 bg-outline-variant rounded-full"></span> $48.50
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <button className="px-4 py-2 border border-outline-variant/50 rounded-xl text-on-surface font-label-md hover:bg-surface-variant transition-colors">Invoice</button>
-                  <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl font-label-md font-bold hover:bg-primary/20 transition-colors">Track Order</button>
-                </div>
-              </div>
-              
-              {/* Tracking Progress Bar */}
-              <div className="px-lg py-xl border-b border-outline-variant/10">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-headline-sm font-bold text-on-surface">Arriving Today by 8 PM</h3>
-                  <span className="text-primary font-bold flex items-center gap-1"><span className="material-symbols-outlined text-[18px]">local_shipping</span> Out for delivery</span>
-                </div>
-                
-                <div className="relative w-full h-2 bg-surface-variant rounded-full mt-8 mb-4">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: '75%' }}
-                    className="absolute top-0 left-0 h-full bg-primary rounded-full"
-                  />
-                  
-                  {/* Nodes */}
-                  <div className="absolute -top-3 left-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]">
-                    <span className="material-symbols-outlined text-[14px]">inventory_2</span>
-                  </div>
-                  <div className="absolute -top-3 left-1/4 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]">
-                    <span className="material-symbols-outlined text-[14px]">done_all</span>
-                  </div>
-                  <div className="absolute -top-3 left-2/4 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]">
-                    <span className="material-symbols-outlined text-[14px]">local_shipping</span>
-                  </div>
-                  <div className="absolute -top-3 right-0 w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-variant flex items-center justify-center text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[14px]">home</span>
-                  </div>
-                </div>
-                <div className="flex justify-between text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
-                  <span>Ordered</span>
-                  <span>Verified</span>
-                  <span>Shipped</span>
-                  <span>Delivered</span>
-                </div>
-              </div>
-              
-              {/* Items */}
-              <div className="p-lg">
-                <div className="flex gap-4">
-                  <div className="w-20 h-20 bg-surface-container rounded-xl p-2 flex items-center justify-center shrink-0">
-                    <img className="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsoVq8dLOU9q6h8GSqFOMZDx-Dwf5K8hpwGFuyY1yyuCdDRktP50RkH8L-cwgHD3wMLrYVW3NBBgFV9zy41Ms-L7Ar-GPqr0QjbNJBJPwAq6Av7y5X8VsfEq5q2NkYDtntM9Zf0OCoCK3yShk9NUPHBsqlVM0jGYTaebKRM8lGukgtz6qPSaiwQWQReUIVwxdm4lBz0g8zXmwAXanHpLDtn1AeYPM15seaBd6WcvD8cZDH7xORCiClWDtjDR42haPjeGG7wqFMJxdU" alt="Item" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-on-surface font-bold">Amoxicillin 500mg</h4>
-                    <p className="text-on-surface-variant text-body-sm mb-2">24 Capsules • Qty: 2</p>
-                    <div className="flex items-center gap-1">
-                      <span className="bg-primary/20 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 w-fit">
-                        <span className="material-symbols-outlined text-[12px]" style={{fontVariationSettings: "'FILL' 1"}}>verified</span> Verified Authentic
-                      </span>
-                      <span className="text-on-surface-variant text-[12px] ml-2">Sold by: City General Hospital</span>
+        {/* Orders List */}
+        {activeTab === "ACTIVE" ? (
+          <div className="space-y-6">
+            {activeOrders.map((order) => {
+              const isApproved = confirmedOrders[order.id];
+
+              return (
+                <div
+                  key={order.id}
+                  className="bg-surface-card border border-surface-border rounded-2xl overflow-hidden shadow-subtle space-y-6 p-6"
+                >
+                  {/* Order Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-surface-border">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-base text-on-surface">{order.id}</span>
+                        <Badge variant={order.stepIndex === 3 ? "success" : "primary"} size="sm" dot>
+                          {order.stepIndex === 3 ? "Delivered" : "In Transit"}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-on-surface-variant">
+                        Placed {order.date} • Seller: <strong className="text-on-surface">{order.seller}</strong>
+                      </p>
+                    </div>
+
+                    <div className="text-right flex items-center gap-3">
+                      <div className="text-right">
+                        <p className="text-xs text-on-surface-variant">Escrow Total</p>
+                        <p className="text-lg font-bold text-primary-light">{formatCurrency(order.total)}</p>
+                      </div>
+                      <Button variant="secondary" size="sm" className="gap-1.5 text-xs">
+                        <Download size={14} />
+                        <span>COA & Invoice</span>
+                      </Button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Active Order Card 2 */}
-            <div className="bg-surface-container-lowest border border-white/5 rounded-[24px] overflow-hidden group hover:border-secondary/30 transition-all duration-300 shadow-lg">
-              {/* Order Header */}
-              <div className="bg-surface-container/50 px-lg py-md border-b border-outline-variant/20 flex flex-wrap gap-4 items-center justify-between">
-                <div>
-                  <div className="text-on-surface-variant text-label-md font-bold uppercase tracking-widest mb-1">Order #MC-8821-BB</div>
-                  <div className="text-body-sm text-on-surface-variant flex items-center gap-2">
-                    Placed on Oct 14, 2024 <span className="w-1 h-1 bg-outline-variant rounded-full"></span> 1 item <span className="w-1 h-1 bg-outline-variant rounded-full"></span> $12.99
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <button className="px-4 py-2 border border-outline-variant/50 rounded-xl text-on-surface font-label-md hover:bg-surface-variant transition-colors">Invoice</button>
-                  <button className="px-4 py-2 bg-secondary/10 text-secondary border border-secondary/20 rounded-xl font-label-md font-bold hover:bg-secondary/20 transition-colors">Track Order</button>
-                </div>
-              </div>
-              
-              {/* Tracking Progress Bar */}
-              <div className="px-lg py-xl border-b border-outline-variant/10">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-headline-sm font-bold text-on-surface">Preparing for Dispatch</h3>
-                  <span className="text-secondary font-bold flex items-center gap-1"><span className="material-symbols-outlined text-[18px]">inventory</span> Processing</span>
-                </div>
-                
-                <div className="relative w-full h-2 bg-surface-variant rounded-full mt-8 mb-4">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: '25%' }}
-                    className="absolute top-0 left-0 h-full bg-secondary rounded-full"
-                  />
-                  
-                  {/* Nodes */}
-                  <div className="absolute -top-3 left-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-[0_0_10px_rgba(139,92,246,0.5)]">
-                    <span className="material-symbols-outlined text-[14px]">inventory_2</span>
-                  </div>
-                  <div className="absolute -top-3 left-1/4 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-[0_0_10px_rgba(139,92,246,0.5)]">
-                    <motion.span animate={{rotate: 360}} transition={{duration: 2, repeat: Infinity, ease: 'linear'}} className="material-symbols-outlined text-[14px]">sync</motion.span>
-                  </div>
-                  <div className="absolute -top-3 left-2/4 w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-variant flex items-center justify-center text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[14px]">local_shipping</span>
-                  </div>
-                  <div className="absolute -top-3 right-0 w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-variant flex items-center justify-center text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[14px]">home</span>
-                  </div>
-                </div>
-                <div className="flex justify-between text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
-                  <span>Ordered</span>
-                  <span>Verifying</span>
-                  <span>Shipped</span>
-                  <span>Delivered</span>
-                </div>
-              </div>
-              
-              {/* Items */}
-              <div className="p-lg">
-                <div className="flex gap-4">
-                  <div className="w-20 h-20 bg-surface-container rounded-xl p-2 flex items-center justify-center shrink-0">
-                    <img className="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATDVPEMY3RstN_RM8vkGlyxLJsZbqQrCyoNyey6O7TCj_fykDo4F7h9GImiN3hZmHLDrqvZRoL62cn0WLwqsbEFQsk3VVzhb61FI4cfjl_cotJHHxfL3d3NzJKO6zaVIylq4H1WWQZZF2AmTXnm3fZe4XFdMsNnZCfUpauMuXnJuOluF3N7hBYy9qn0_taRf6Jpdk1VRAP_Rlx-Pywqr0VdBrhWG7yN0QM-OBvv1716x907ufYnOxTl08B6Ajdq6qFAptVGGA3eKzZ" alt="Item" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-on-surface font-bold">Ibuprofen 400mg</h4>
-                    <p className="text-on-surface-variant text-body-sm mb-2">50 Tablets • Qty: 1</p>
-                    <div className="flex items-center gap-1">
-                      <span className="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 w-fit">
-                        <span className="material-symbols-outlined text-[12px]">pending</span> Verification Pending
-                      </span>
-                      <span className="text-on-surface-variant text-[12px] ml-2">Sold by: MediTrust Pharmacy</span>
+
+                  {/* 4-Step Progress Bar */}
+                  <div className="py-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative">
+                      {steps.map((step, idx) => {
+                        const isDone = idx <= order.stepIndex;
+                        const isCurrent = idx === order.stepIndex;
+
+                        return (
+                          <div key={idx} className="flex flex-col items-center text-center space-y-1.5 relative z-10">
+                            <div
+                              className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border ${
+                                isDone
+                                  ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
+                                  : "bg-surface-subtle text-slate-500 border-surface-border"
+                              } ${isCurrent ? "ring-2 ring-emerald-400" : ""}`}
+                            >
+                              {isDone ? <CheckCircle2 size={18} /> : idx + 1}
+                            </div>
+                            <div>
+                              <p className={`text-xs font-bold ${isDone ? "text-on-surface" : "text-on-surface-variant"}`}>
+                                {step.label}
+                              </p>
+                              <p className="text-[11px] text-on-surface-variant">{step.desc}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
+
+                  {/* Live Cold-Chain Sensor Reading Strip */}
+                  <div className="bg-surface-subtle p-4 rounded-xl border border-surface-border grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
+                        <ThermometerSnowflake size={20} />
+                      </div>
+                      <div>
+                        <p className="text-on-surface-variant">Live Container Temp</p>
+                        <p className="font-bold text-emerald-400">{order.temperature}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+                        <Truck size={20} />
+                      </div>
+                      <div>
+                        <p className="text-on-surface-variant">Carrier & Courier</p>
+                        <p className="font-bold text-on-surface">{order.courier}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+                        <Clock size={20} />
+                      </div>
+                      <div>
+                        <p className="text-on-surface-variant">Estimated Arrival</p>
+                        <p className="font-bold text-amber-400">{order.eta}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Items list in order */}
+                  <div className="space-y-2 pt-2">
+                    <p className="text-xs font-semibold text-on-surface">Order Contents:</p>
+                    <div className="divide-y divide-surface-border">
+                      {order.items.map((item, idx) => (
+                        <div key={idx} className="py-2 flex justify-between items-center text-xs">
+                          <span className="text-on-surface">
+                            {item.qty}x {item.name}
+                          </span>
+                          <span className="font-medium text-on-surface-variant">
+                            {formatCurrency(item.price * item.qty)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Bar */}
+                  <div className="pt-4 border-t border-surface-border flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                      <ShieldCheck size={16} className="text-emerald-400" />
+                      <span>Protected by Escrow until verified by receiving pharmacist.</span>
+                    </div>
+
+                    {order.stepIndex === 3 ? (
+                      isApproved ? (
+                        <Badge variant="success" size="md">
+                          ✓ Inspection Approved & Escrow Released
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          className="gap-2 shadow-glow"
+                          onClick={() => handleConfirmInspection(order.id)}
+                        >
+                          <CheckCircle2 size={16} />
+                          <span>Confirm Package & Release Escrow</span>
+                        </Button>
+                      )
+                    ) : (
+                      <Link to="/chat">
+                        <Button variant="secondary" size="sm" className="text-xs">
+                          Message Seller Pharmacist
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Past Orders Tab */
+          <div className="space-y-4">
+            {pastOrders.map((order) => (
+              <div
+                key={order.id}
+                className="bg-surface-card border border-surface-border rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-subtle"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-sm text-on-surface">{order.id}</span>
+                    <Badge variant="success" size="sm">Completed</Badge>
+                  </div>
+                  <p className="text-xs text-on-surface-variant">
+                    Delivered on {order.date} • {order.seller}
+                  </p>
+                  <p className="text-xs text-on-surface font-medium">
+                    {order.items.map((i) => `${i.qty}x ${i.name}`).join(", ")}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-xs text-on-surface-variant">Total Paid</p>
+                    <p className="text-sm font-bold text-on-surface">{formatCurrency(order.total)}</p>
+                  </div>
+                  <Button variant="secondary" size="sm" className="gap-1.5 text-xs">
+                    <Download size={14} />
+                    <span>Receipt</span>
+                  </Button>
                 </div>
               </div>
-            </div>
-            
+            ))}
           </div>
         )}
-
       </main>
     </div>
   );
