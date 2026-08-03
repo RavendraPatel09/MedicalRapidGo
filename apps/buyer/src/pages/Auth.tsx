@@ -1,177 +1,141 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Store, ShieldAlert, ArrowLeft } from 'lucide-react';
-import { useAuthStore } from '@medicycle/store';
-import { Button, Card, Input } from '@medicycle/ui';
-import { useNavigate } from 'react-router-dom';
-import type { Role } from '@medicycle/types';
-
-type AuthStep = 'ROLE_SELECTION' | 'LOGIN';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Button, Card, Badge, Input } from "@medicycle/ui";
+import { useAuthStore } from "@medicycle/store";
+import Navbar from "../components/Navbar";
+import {
+  UserCircle2,
+  Lock,
+  Mail,
+  ShieldCheck,
+  Building2,
+  FileCheck2,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 export default function Auth() {
-  const [step, setStep] = useState<AuthStep>('ROLE_SELECTION');
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background">
-      {/* Dynamic Background Glow based on role */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
-        <motion.div 
-          animate={{
-            backgroundColor: selectedRole === 'BUYER' ? '#3B82F6' : 
-                             selectedRole === 'SELLER' ? '#10B981' : 
-                             selectedRole === 'ADMIN' ? '#8B5CF6' : '#0F172A',
-            scale: selectedRole ? [1, 1.2, 1] : 1,
-          }}
-          transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-          className="w-[800px] h-[800px] rounded-full blur-[120px]"
-        />
-      </div>
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("dr.miller@chicagohealth.org");
+  const [password, setPassword] = useState("••••••••••••");
+  const [npiNumber, setNpiNumber] = useState("NPI-994827104");
+  const [role, setRole] = useState<"BUYER" | "SELLER">("BUYER");
 
-      <div className="relative z-10 w-full max-w-4xl px-4">
-        <AnimatePresence mode="wait">
-          {step === 'ROLE_SELECTION' ? (
-            <RoleSelection 
-              key="roles" 
-              onSelect={(role) => {
-                setSelectedRole(role);
-                setTimeout(() => setStep('LOGIN'), 400);
-              }} 
-            />
-          ) : (
-            <LoginForm 
-              key="login" 
-              role={selectedRole!} 
-              onBack={() => {
-                setStep('ROLE_SELECTION');
-                setSelectedRole(null);
-              }} 
-            />
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
-function RoleSelection({ onSelect }: { onSelect: (role: Role) => void }) {
-  const roles = [
-    {
-      id: 'BUYER' as Role,
-      title: 'Buyer',
-      desc: 'Purchase verified medicines safely.',
-      icon: <ShoppingBag size={32} />,
-      color: 'text-accent-blue',
-      glow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]',
-      border: 'hover:border-accent-blue/50'
-    },
-    {
-      id: 'SELLER' as Role,
-      title: 'Seller',
-      desc: 'List unused medicines & pharmacies.',
-      icon: <Store size={32} />,
-      color: 'text-accent-green',
-      glow: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]',
-      border: 'hover:border-accent-green/50'
-    },
-    {
-      id: 'ADMIN' as Role,
-      title: 'Administrator',
-      desc: 'Manage platform & review fraud.',
-      icon: <ShieldAlert size={32} />,
-      color: 'text-accent-purple',
-      glow: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]',
-      border: 'hover:border-accent-purple/50'
-    }
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="text-center"
-    >
-      <h2 className="text-3xl font-bold mb-2">Welcome to MediCycle</h2>
-      <p className="text-gray-400 mb-12">How would you like to continue?</p>
-      
-      <div className="grid md:grid-cols-3 gap-6">
-        {roles.map((role, i) => (
-          <motion.div
-            key={role.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <Card 
-              glass
-              className={`p-8 cursor-pointer transition-all duration-300 ${role.glow} ${role.border} group`}
-              onClick={() => onSelect(role.id)}
-            >
-              <div className={`mb-6 p-4 rounded-2xl bg-surface inline-block border border-white/5 group-hover:scale-110 transition-transform ${role.color}`}>
-                {role.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-2">{role.title}</h3>
-              <p className="text-sm text-gray-400">{role.desc}</p>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
-function LoginForm({ role, onBack }: { role: Role, onBack: () => void }) {
-  const login = useAuthStore((s) => s.login);
-  // We mock navigation since we are building a multi-port monorepo setup in reality,
-  // but for the sake of frontend demonstration we will just mock the login success.
+  const { login } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(role, `Mock ${role}`);
-    // If it was a single app, we'd navigate to /dashboard.
-    // Since it's a monorepo, in production they might be on different subdomains.
-    // For now, we just redirect back to landing or fake a dashboard inside buyer app.
-    alert(`Logged in as ${role}! (Mock)`);
-    if(role === 'BUYER') navigate('/marketplace');
+    login(role, isLogin ? "Dr. Miller, MD" : "St. Jude Clinic Admin");
+    navigate("/marketplace");
+  };
+
+  const handleDemoBuyer = () => {
+    login("BUYER", "Dr. Sarah Chen, MD (Mercy Health)");
+    navigate("/marketplace");
+  };
+
+  const handleDemoSeller = () => {
+    login("SELLER", "Marcus Brody, RPh (Apex Health)");
+    window.location.href = "http://localhost:5177";
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="max-w-md mx-auto"
-    >
-      <button 
-        onClick={onBack}
-        className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
-      >
-        <ArrowLeft size={16} /> Back to roles
-      </button>
+    <div className="min-h-screen bg-background text-on-background flex flex-col selection:bg-primary/20">
+      <Navbar />
 
-      <Card glass className="p-8">
-        <h2 className="text-2xl font-bold mb-2 capitalize">{role.toLowerCase()} Login</h2>
-        <p className="text-gray-400 text-sm mb-8">Sign in to your account</p>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <Input type="email" placeholder="Email address" required defaultValue="demo@medicycle.app" />
-          <Input type="password" placeholder="Password" required defaultValue="password123" />
-          
-          <div className="flex justify-between items-center text-sm pt-2">
-            <label className="flex items-center gap-2 text-gray-400 cursor-pointer">
-              <input type="checkbox" className="rounded bg-surface border-white/10 text-accent-blue focus:ring-accent-blue" />
-              Remember me
-            </label>
-            <a href="#" className="text-accent-blue hover:underline">Forgot password?</a>
+      <main className="flex-1 max-w-md mx-auto px-4 py-12 w-full flex flex-col justify-center">
+        <div className="bg-surface-card border border-surface-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-card">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-xl bg-primary-subtle border border-primary/20 flex items-center justify-center text-primary-light mx-auto">
+              <ShieldCheck size={26} />
+            </div>
+            <h1 className="text-2xl font-bold text-on-surface">
+              {isLogin ? "Healthcare Provider Login" : "Register Institutional Account"}
+            </h1>
+            <p className="text-xs text-on-surface-variant">
+              Secure, DSCSA-compliant surplus exchange network.
+            </p>
           </div>
 
-          <Button type="submit" className="w-full mt-6">
-            Sign In
-          </Button>
-        </form>
-      </Card>
-    </motion.div>
+          {/* Login / Register Tab Switcher */}
+          <div className="flex bg-surface-subtle p-1 rounded-xl border border-surface-border">
+            <button
+              onClick={() => setIsLogin(true)}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                isLogin
+                  ? "bg-surface-card text-on-surface shadow-sm border border-surface-border"
+                  : "text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => setIsLogin(false)}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                !isLogin
+                  ? "bg-surface-card text-on-surface shadow-sm border border-surface-border"
+                  : "text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              New Institution
+            </button>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Institutional Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              leftIcon={<Mail size={16} />}
+              required
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              leftIcon={<Lock size={16} />}
+              required
+            />
+
+            {!isLogin && (
+              <Input
+                label="National Provider Identifier (NPI) / License #"
+                value={npiNumber}
+                onChange={(e) => setNpiNumber(e.target.value)}
+                leftIcon={<FileCheck2 size={16} />}
+                helperText="Required for pharmacy & clinic verification"
+                required
+              />
+            )}
+
+            <Button size="lg" type="submit" className="w-full gap-2 shadow-glow">
+              <span>{isLogin ? "Sign In to Portal" : "Submit for Verification"}</span>
+              <ArrowRight size={16} />
+            </Button>
+          </form>
+
+          {/* Quick Demo Access Bar */}
+          <div className="pt-4 border-t border-surface-border space-y-2">
+            <p className="text-[11px] font-semibold text-on-surface-variant text-center uppercase tracking-wider">
+              Instant 1-Click Demo Logins:
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="secondary" size="sm" onClick={handleDemoBuyer} className="text-xs">
+                Demo Buyer
+              </Button>
+              <Button variant="secondary" size="sm" onClick={handleDemoSeller} className="text-xs">
+                Demo Seller
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
