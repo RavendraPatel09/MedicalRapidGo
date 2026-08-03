@@ -7,25 +7,56 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   error?: string;
+  helperText?: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, error, ...props }, ref) => {
+  ({ className, label, error, helperText, leftIcon, rightIcon, id, disabled, ...props }, ref) => {
+    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
+
     return (
-      <div className="flex flex-col gap-1 w-full">
-        <input
-          ref={ref}
-          className={cn(
-            "w-full bg-surfaceLighter/50 border border-white/10 rounded-md px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue/50 transition-all backdrop-blur-sm",
-            error && "border-red-500 focus:ring-red-500/50 focus:border-red-500",
-            className
+      <div className="w-full space-y-1.5">
+        {label && (
+          <label htmlFor={inputId} className="block text-xs font-medium text-on-surface-variant">
+            {label}
+          </label>
+        )}
+        <div className="relative flex items-center">
+          {leftIcon && (
+            <div className="absolute left-3 text-on-surface-variant pointer-events-none flex items-center justify-center">
+              {leftIcon}
+            </div>
           )}
-          {...props}
-        />
-        {error && <span className="text-sm text-red-500">{error}</span>}
+          <input
+            ref={ref}
+            id={inputId}
+            disabled={disabled}
+            className={cn(
+              "w-full bg-surface-subtle border border-surface-border text-on-surface placeholder:text-on-surface-variant/50 text-sm rounded-lg px-3.5 py-2.5 transition-colors",
+              "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              leftIcon && "pl-10",
+              rightIcon && "pr-10",
+              error && "border-accent-red focus:border-accent-red focus:ring-accent-red/30",
+              className
+            )}
+            {...props}
+          />
+          {rightIcon && (
+            <div className="absolute right-3 text-on-surface-variant flex items-center justify-center">
+              {rightIcon}
+            </div>
+          )}
+        </div>
+        {error && <p className="text-xs text-accent-red">{error}</p>}
+        {helperText && !error && <p className="text-xs text-on-surface-variant/70">{helperText}</p>}
       </div>
     );
   }
 );
+
 Input.displayName = "Input";

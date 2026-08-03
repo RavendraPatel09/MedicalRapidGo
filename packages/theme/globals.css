@@ -3,17 +3,47 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    border-color: #1f2d44;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
   body {
-    @apply bg-background text-on-background font-sans antialiased selection:bg-primary/30 selection:text-primary;
+    @apply bg-background text-on-background font-sans antialiased;
+    background-color: #0b0f19;
+    color: #f1f5f9;
+  }
+
+  /* Custom Eye-Comfort Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0b0f19;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1f2d44;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-surface/50 backdrop-blur-md border border-white/10 shadow-glass;
+  .card-hover {
+    @apply transition-all duration-200 hover:border-primary/40 hover:shadow-card hover:-translate-y-0.5;
   }
-  
-  .glass-card {
-    @apply bg-surface-container/60 backdrop-blur-xl border border-white/5 rounded-DEFAULT shadow-glass;
+
+  .badge-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
