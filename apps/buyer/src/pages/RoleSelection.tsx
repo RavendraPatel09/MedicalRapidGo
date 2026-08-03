@@ -1,221 +1,177 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Button, Card, Badge } from "@medicycle/ui";
+import Navbar from "../components/Navbar";
+import { 
+  ShoppingBag, 
+  Store, 
+  ShieldCheck, 
+  CheckCircle2, 
+  ArrowRight,
+  Sparkles,
+  Building2,
+  Lock
+} from "lucide-react";
 
 export default function RoleSelection() {
-  const [activeRole, setActiveRole] = useState<'buyer' | 'seller' | 'admin' | null>('buyer');
+  const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | "admin">("buyer");
   const navigate = useNavigate();
 
-  const handleRoleSelect = (role: 'buyer' | 'seller' | 'admin') => {
-    setActiveRole(role);
+  const handleProceed = () => {
+    if (selectedRole === "buyer") {
+      navigate("/marketplace");
+    } else if (selectedRole === "seller") {
+      // Navigate to seller app port or local seller route
+      window.location.href = "http://localhost:5177";
+    } else if (selectedRole === "admin") {
+      window.location.href = "http://localhost:5176";
+    }
   };
 
-  const handleContinue = () => {
-    if (activeRole === 'buyer') navigate('/marketplace');
-    if (activeRole === 'seller') window.location.href = 'http://localhost:5177';
-    if (activeRole === 'admin') window.location.href = 'http://localhost:5176';
-  };
+  const roles = [
+    {
+      id: "buyer" as const,
+      title: "Healthcare Buyer",
+      subtitle: "Clinics, Hospitals & Licensed Practitioners",
+      icon: ShoppingBag,
+      color: "sky",
+      badge: "Fast Sourcing",
+      description: "Search verified surplus medicine inventory, place escrow-backed orders, and track cold-chain temperature logs.",
+      features: [
+        "Access to discounted verified surplus medicines",
+        "Cold-chain delivery status with live temp logs",
+        "Automated batch COA certificate retrieval",
+        "100% money-back escrow protection",
+      ],
+      destination: "Browse Marketplace",
+    },
+    {
+      id: "seller" as const,
+      title: "Licensed Seller / Pharmacy",
+      subtitle: "Certified Distributors & Retail Pharmacies",
+      icon: Store,
+      color: "emerald",
+      badge: "Monetize Surplus",
+      description: "List unopened, unexpired surplus inventory, verify batch OCR codes, negotiate deals, and automate compliance.",
+      features: [
+        "Instant OCR barcode & batch scanning upload",
+        "Smart dynamic pricing recommendations",
+        "Direct buyer negotiation & counter-offer chat",
+        "Automated DEA & DSCSA compliance reports",
+      ],
+      destination: "Open Seller Dashboard",
+    },
+    {
+      id: "admin" as const,
+      title: "Compliance Officer / Admin",
+      subtitle: "Platform Regulators & Operations Team",
+      icon: ShieldCheck,
+      color: "indigo",
+      badge: "Platform Control",
+      description: "Monitor platform health, verify merchant NPI licenses, resolve escrow disputes, and track system-wide transactions.",
+      features: [
+        "Merchant verification & license review queue",
+        "Cold-chain temperature excursion alerts",
+        "Escrow settlement oversight & fraud monitoring",
+        "Complete platform audit & regulatory logs",
+      ],
+      destination: "Launch Admin Portal",
+    },
+  ];
 
   return (
-    <div className="font-body-md text-body-md bg-background text-[#e1e2ec] min-h-screen flex flex-col relative overflow-hidden">
-      
-      {/* Background Ambience */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-secondary/10 rounded-full blur-[120px]"></div>
-        
-        {/* Subtle Grid overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBmaWxsPSJub25lIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBzdHJva2Utd2lkdGg9IjEiLz48L2c+PC9zdmc+')] opacity-50"></div>
-      </div>
+    <div className="min-h-screen bg-background text-on-background flex flex-col selection:bg-primary/20">
+      <Navbar />
 
-      {/* Header */}
-      <header className="w-full py-xl px-gutter relative z-10 flex justify-center md:justify-start max-w-container-max mx-auto">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-3xl" style={{fontVariationSettings: "'FILL' 1"}}>medical_services</span>
-          <span className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">MediCycle</span>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-gutter w-full max-w-container-max mx-auto pb-xxxl">
-        
-        <div className="text-center mb-xxl max-w-2xl mt-[-8vh]">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-display-sm md:text-display-md lg:text-display-lg font-bold text-on-surface mb-md tracking-tight"
-          >
-            How will you use <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">MediCycle</span>?
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-body-lg text-on-surface-variant max-w-xl mx-auto"
-          >
-            Select your role to access customized features, analytics, and marketplace tools designed specifically for your needs.
-          </motion.p>
+      <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col justify-center">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-subtle text-primary-light text-xs font-semibold">
+            <Sparkles size={14} />
+            <span>Select Your Operating Workspace</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-on-surface">
+            Choose how you will use MediCycle
+          </h1>
+          <p className="text-sm text-on-surface-variant">
+            Each role delivers tailored workflows, security permissions, and tools designed for your medical operations.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-lg w-full max-w-5xl">
-          
-          {/* Buyer Role */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => handleRoleSelect('buyer')}
-            className={`
-              relative p-xl rounded-[28px] cursor-pointer transition-all duration-300 overflow-hidden group
-              ${activeRole === 'buyer' 
-                ? 'bg-primary/10 border-2 border-primary shadow-[0_0_40px_rgba(59,130,246,0.15)] scale-[1.02]' 
-                : 'bg-surface-container border-2 border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-high'
-              }
-            `}
-          >
-            {activeRole === 'buyer' && (
-              <motion.div layoutId="active-indicator" className="absolute top-4 right-4 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[16px] text-on-primary">check</span>
-              </motion.div>
-            )}
-            
-            <div className={`w-16 h-16 rounded-2xl mb-lg flex items-center justify-center transition-colors duration-300
-              ${activeRole === 'buyer' ? 'bg-primary text-on-primary' : 'bg-primary-container/20 text-primary group-hover:bg-primary/20'}
-            `}>
-              <span className="material-symbols-outlined text-[32px]">shopping_bag</span>
-            </div>
-            
-            <h3 className="text-headline-sm font-bold text-on-surface mb-sm">Buyer</h3>
-            <p className="text-body-md text-on-surface-variant mb-xl line-clamp-3">
-              Purchase verified medicines from certified pharmacies with secure tracking and authentication.
-            </p>
-            
-            <ul className="space-y-sm text-body-sm text-on-surface-variant mb-xl">
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">done</span> Access to full marketplace</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">done</span> AI-powered search</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-primary">done</span> Secure transaction tracking</li>
-            </ul>
+        {/* Roles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {roles.map((role) => {
+            const Icon = role.icon;
+            const isSelected = selectedRole === role.id;
 
-            <div className="mt-auto absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </motion.div>
+            return (
+              <div
+                key={role.id}
+                onClick={() => setSelectedRole(role.id)}
+                className={`relative rounded-2xl p-6 transition-all duration-200 cursor-pointer border flex flex-col justify-between ${
+                  isSelected
+                    ? "bg-surface-card border-primary ring-2 ring-primary/40 shadow-card"
+                    : "bg-surface border-surface-border hover:border-slate-600 hover:bg-surface-card/60"
+                }`}
+              >
+                {isSelected && (
+                  <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow">
+                    <CheckCircle2 size={16} />
+                  </div>
+                )}
 
-          {/* Seller Role */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            onClick={() => handleRoleSelect('seller')}
-            className={`
-              relative p-xl rounded-[28px] cursor-pointer transition-all duration-300 overflow-hidden group
-              ${activeRole === 'seller' 
-                ? 'bg-secondary/10 border-2 border-secondary shadow-[0_0_40px_rgba(139,92,246,0.15)] scale-[1.02]' 
-                : 'bg-surface-container border-2 border-outline-variant/30 hover:border-secondary/50 hover:bg-surface-container-high'
-              }
-            `}
-          >
-            {activeRole === 'seller' && (
-              <motion.div layoutId="active-indicator" className="absolute top-4 right-4 w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[16px] text-on-secondary">check</span>
-              </motion.div>
-            )}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 rounded-xl bg-surface-subtle border border-surface-border flex items-center justify-center text-primary-light">
+                      <Icon size={24} />
+                    </div>
+                    <Badge variant={role.id === "buyer" ? "primary" : role.id === "seller" ? "success" : "neutral"} size="sm">
+                      {role.badge}
+                    </Badge>
+                  </div>
 
-            <div className={`w-16 h-16 rounded-2xl mb-lg flex items-center justify-center transition-colors duration-300
-              ${activeRole === 'seller' ? 'bg-secondary text-on-secondary' : 'bg-secondary-container/20 text-secondary group-hover:bg-secondary/20'}
-            `}>
-              <span className="material-symbols-outlined text-[32px]">storefront</span>
-            </div>
-            
-            <div className="flex items-center gap-2 mb-sm">
-              <h3 className="text-headline-sm font-bold text-on-surface">Seller</h3>
-              <span className="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Pro</span>
-            </div>
-            
-            <p className="text-body-md text-on-surface-variant mb-xl line-clamp-3">
-              List inventory, manage orders, and utilize AI OCR tools to quickly add verified stock.
-            </p>
-            
-            <ul className="space-y-sm text-body-sm text-on-surface-variant mb-xl">
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-secondary">done</span> Inventory dashboard</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-secondary">done</span> AI Smart Scan upload</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-secondary">done</span> Negotiation tools</li>
-            </ul>
+                  <div>
+                    <h3 className="text-lg font-bold text-on-surface">{role.title}</h3>
+                    <p className="text-xs text-primary-light font-medium">{role.subtitle}</p>
+                  </div>
 
-            <div className="mt-auto absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-secondary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </motion.div>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {role.description}
+                  </p>
 
-          {/* Admin Role */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            onClick={() => handleRoleSelect('admin')}
-            className={`
-              relative p-xl rounded-[28px] cursor-pointer transition-all duration-300 overflow-hidden group
-              ${activeRole === 'admin' 
-                ? 'bg-tertiary/10 border-2 border-tertiary shadow-[0_0_40px_rgba(255,183,134,0.15)] scale-[1.02]' 
-                : 'bg-surface-container border-2 border-outline-variant/30 hover:border-tertiary/50 hover:bg-surface-container-high'
-              }
-            `}
-          >
-            {activeRole === 'admin' && (
-              <motion.div layoutId="active-indicator" className="absolute top-4 right-4 w-6 h-6 rounded-full bg-tertiary flex items-center justify-center">
-                <span className="material-symbols-outlined text-[16px] text-on-tertiary">check</span>
-              </motion.div>
-            )}
+                  <div className="pt-3 border-t border-surface-border space-y-2">
+                    <p className="text-[11px] font-semibold text-on-surface uppercase tracking-wider">Features Included:</p>
+                    <ul className="space-y-1.5">
+                      {role.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs text-on-surface-variant">
+                          <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
 
-            <div className={`w-16 h-16 rounded-2xl mb-lg flex items-center justify-center transition-colors duration-300
-              ${activeRole === 'admin' ? 'bg-tertiary text-on-tertiary' : 'bg-tertiary-container/20 text-tertiary group-hover:bg-tertiary/20'}
-            `}>
-              <span className="material-symbols-outlined text-[32px]">admin_panel_settings</span>
-            </div>
-            
-            <h3 className="text-headline-sm font-bold text-on-surface mb-sm">Admin</h3>
-            <p className="text-body-md text-on-surface-variant mb-xl line-clamp-3">
-              Oversee platform security, verify seller compliance, and manage dispute resolution.
-            </p>
-            
-            <ul className="space-y-sm text-body-sm text-on-surface-variant mb-xl">
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-tertiary">done</span> Global analytics</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-tertiary">done</span> Seller verification approval</li>
-              <li className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-tertiary">done</span> System configuration</li>
-            </ul>
-
-            <div className="mt-auto absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-tertiary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </motion.div>
-
+                <div className="mt-6 pt-4 border-t border-surface-border">
+                  <span className={`text-xs font-semibold flex items-center gap-1 ${isSelected ? "text-primary-light" : "text-on-surface-variant"}`}>
+                    {role.destination} <ArrowRight size={14} />
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Action Button */}
-        <AnimatePresence>
-          {activeRole && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="mt-xl text-center z-20"
-            >
-              <button 
-                onClick={handleContinue}
-                className={`
-                  px-12 py-4 rounded-full font-bold text-lg shadow-lg flex items-center justify-center gap-2 mx-auto transition-transform hover:scale-105 active:scale-95
-                  ${activeRole === 'buyer' ? 'bg-primary text-on-primary shadow-primary/20' : ''}
-                  ${activeRole === 'seller' ? 'bg-secondary text-on-secondary shadow-secondary/20' : ''}
-                  ${activeRole === 'admin' ? 'bg-tertiary text-on-tertiary shadow-tertiary/20' : ''}
-                `}
-              >
-                Continue as {activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button size="lg" onClick={handleProceed} className="w-full sm:w-auto px-10 gap-2 shadow-glow">
+            <span>Continue as {selectedRole.toUpperCase()}</span>
+            <ArrowRight size={18} />
+          </Button>
+          <Link to="/" className="text-xs text-on-surface-variant hover:text-on-surface">
+            Return to Homepage
+          </Link>
+        </div>
       </main>
-      
-      {/* Footer minimal */}
-      <footer className="w-full text-center py-6 text-on-surface-variant text-body-sm relative z-10">
-        &copy; 2024 MediCycle Platforms Inc. All rights reserved.
-      </footer>
     </div>
   );
 }
