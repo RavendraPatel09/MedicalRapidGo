@@ -1,97 +1,270 @@
-import { Card, Button } from '@medicycle/ui';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Users, AlertTriangle, ShieldCheck, Download, BarChart as BarChartIcon } from 'lucide-react';
-import { formatCurrency } from '@medicycle/utils';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { Button, Card, Badge } from "@medicycle/ui";
+import { formatCurrency, formatDate } from "@medicycle/utils";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+import {
+  Users,
+  AlertTriangle,
+  ShieldCheck,
+  Download,
+  Lock,
+  CheckCircle2,
+  XCircle,
+  Building2,
+  FileCheck2,
+  TrendingUp,
+} from "lucide-react";
 
-const data = [
-  { name: 'Mon', transactions: 40 },
-  { name: 'Tue', transactions: 30 },
-  { name: 'Wed', transactions: 20 },
-  { name: 'Thu', transactions: 27 },
-  { name: 'Fri', transactions: 18 },
-  { name: 'Sat', transactions: 23 },
-  { name: 'Sun', transactions: 34 },
+const VOLUME_DATA = [
+  { name: "Mon", volume: 42000 },
+  { name: "Tue", volume: 38000 },
+  { name: "Wed", volume: 55000 },
+  { name: "Thu", volume: 48000 },
+  { name: "Fri", volume: 64000 },
+  { name: "Sat", volume: 31000 },
+  { name: "Sun", volume: 29000 },
+];
+
+const PENDING_VERIFICATIONS = [
+  {
+    id: "ver-1",
+    facility: "Memorial Health Regional Pharmacy",
+    npi: "NPI-883920194",
+    type: "Hospital Center",
+    state: "Illinois",
+    appliedDate: "Today, 9:20 AM",
+    status: "PENDING",
+  },
+  {
+    id: "ver-2",
+    facility: "Midwest Clinical Distribution Vault",
+    npi: "NPI-551029384",
+    type: "Licensed Wholesaler",
+    state: "Indiana",
+    appliedDate: "Yesterday",
+    status: "PENDING",
+  },
 ];
 
 export default function Dashboard() {
-  return (
-    <div className="p-8 max-w-6xl mx-auto space-y-8">
-      <header className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-1">Platform Overview</h1>
-          <p className="text-gray-400">Global statistics and platform health.</p>
-        </div>
-        <Button variant="outline" className="gap-2">
-          <Download size={18} /> Export Report
-        </Button>
-      </header>
+  const [verifications, setVerifications] = useState(PENDING_VERIFICATIONS);
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard title="Total Volume (30d)" value={formatCurrency(124500.00)} icon={<BarChartIcon size={20} />} />
-        <StatCard title="Active Users" value="12,492" icon={<Users size={20} />} />
-        <StatCard title="Verified Sellers" value="843" icon={<ShieldCheck size={20} className="text-accent-green" />} />
-        <StatCard title="Fraud Alerts" value="12" icon={<AlertTriangle size={20} className="text-accent-orange" />} alert />
+  const handleApprove = (id: string) => {
+    setVerifications((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, status: "APPROVED" } : v))
+    );
+  };
+
+  const handleReject = (id: string) => {
+    setVerifications((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, status: "REJECTED" } : v))
+    );
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-on-surface">Platform Compliance & Escrow Health</h1>
+          <p className="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+            System-wide escrow oversight, cold-chain compliance monitoring, and provider verification.
+          </p>
+        </div>
+        <Button variant="secondary" size="sm" className="gap-2 text-xs">
+          <Download size={14} />
+          <span>Export Compliance Audit</span>
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chart */}
-        <Card glass className="p-6 lg:col-span-2">
-          <h3 className="text-lg font-bold mb-6">Transaction Volume</h3>
-          <div className="h-[300px] w-full">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-2 shadow-subtle">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-on-surface-variant font-medium">30-Day Escrow Volume</span>
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+              <Lock size={18} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-on-surface">{formatCurrency(307000)}</p>
+          <p className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+            <TrendingUp size={13} /> 100% on-time settlement
+          </p>
+        </div>
+
+        <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-2 shadow-subtle">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-on-surface-variant font-medium">Verified Facilities</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <Building2 size={18} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-on-surface">542 Institutions</p>
+          <p className="text-[11px] text-sky-400 font-medium">NPI & DEA validated</p>
+        </div>
+
+        <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-2 shadow-subtle">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-on-surface-variant font-medium">Temperature Integrity</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <ShieldCheck size={18} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-emerald-400">99.9%</p>
+          <p className="text-[11px] text-on-surface-variant">0 Cold-chain excursions</p>
+        </div>
+
+        <div className="bg-surface-card border border-surface-border rounded-xl p-5 space-y-2 shadow-subtle">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-on-surface-variant font-medium">Pending Verifications</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <FileCheck2 size={18} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-amber-400">2 In Queue</p>
+          <p className="text-[11px] text-on-surface-variant">Requires license approval</p>
+        </div>
+      </div>
+
+      {/* Chart & Audit Logs Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Chart (8 cols) */}
+        <div className="lg:col-span-8 bg-surface-card border border-surface-border rounded-2xl p-6 space-y-4 shadow-subtle">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-bold text-on-surface">Weekly Settlement Volume</h2>
+              <p className="text-xs text-on-surface-variant">Total funds transacted through locked escrow trust.</p>
+            </div>
+            <span className="text-xs font-bold text-primary-light">$307,000 Total</span>
+          </div>
+
+          <div className="h-64 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                <XAxis dataKey="name" stroke="#ffffff50" axisLine={false} tickLine={false} />
-                <YAxis stroke="#ffffff50" axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111827', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                  cursor={{ fill: '#ffffff10' }}
+              <BarChart data={VOLUME_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1f2d44" />
+                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
+                <YAxis stroke="#94a3b8" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#182234",
+                    borderColor: "#1f2d44",
+                    borderRadius: "8px",
+                    color: "#f1f5f9",
+                    fontSize: "12px",
+                  }}
                 />
-                <Bar dataKey="transactions" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="volume" fill="#0284c7" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </Card>
-
-        {/* Audit Logs */}
-        <Card glass className="p-6">
-          <h3 className="text-lg font-bold mb-4">Recent Audit Logs</h3>
-          <div className="space-y-4">
-            <AuditItem title="New Seller Approved" time="2 mins ago" user="Admin_01" />
-            <AuditItem title="Suspicious Login Blocked" time="15 mins ago" user="System" warning />
-            <AuditItem title="Listing Removed (Expired)" time="1 hour ago" user="Admin_02" />
-            <AuditItem title="Platform Fee Updated" time="3 hours ago" user="SuperAdmin" />
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ title, value, icon, alert }: { title: string, value: string, icon: React.ReactNode, alert?: boolean }) {
-  return (
-    <motion.div whileHover={{ y: -5 }}>
-      <Card glass className={`p-6 ${alert ? 'border-accent-orange/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]' : ''}`}>
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-sm text-gray-400 font-medium">{title}</h3>
-          <div className="text-gray-400">{icon}</div>
         </div>
-        <span className="text-3xl font-bold">{value}</span>
-      </Card>
-    </motion.div>
-  );
-}
 
-function AuditItem({ title, time, user, warning }: { title: string, time: string, user: string, warning?: boolean }) {
-  return (
-    <div className="border-b border-white/5 last:border-0 pb-3 last:pb-0">
-      <div className="flex justify-between items-start mb-1">
-        <h4 className={`text-sm font-semibold ${warning ? 'text-accent-orange' : 'text-gray-200'}`}>{title}</h4>
-        <span className="text-xs text-gray-500 whitespace-nowrap">{time}</span>
+        {/* Audit Logs (4 cols) */}
+        <div className="lg:col-span-4 bg-surface-card border border-surface-border rounded-2xl p-6 space-y-4 shadow-subtle">
+          <h2 className="text-base font-bold text-on-surface">Platform Compliance Feed</h2>
+
+          <div className="space-y-3.5 text-xs">
+            <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-emerald-400">Escrow #9921 Released</span>
+                <span className="text-[10px] text-on-surface-variant">2 mins ago</span>
+              </div>
+              <p className="text-on-surface-variant">Receiving pharmacist inspection verified.</p>
+            </div>
+
+            <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-sky-400">Cold Chain Calibrated</span>
+                <span className="text-[10px] text-on-surface-variant">15 mins ago</span>
+              </div>
+              <p className="text-on-surface-variant">Sensor logger #SN-99824 sync normal (4.2°C).</p>
+            </div>
+
+            <div className="p-3 rounded-lg bg-surface-subtle border border-surface-border space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-amber-400">Expiry Threshold Warning</span>
+                <span className="text-[10px] text-on-surface-variant">1 hour ago</span>
+              </div>
+              <p className="text-on-surface-variant">3 batches reached 60-day liquidation window.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <p className="text-xs text-gray-400">By {user}</p>
+
+      {/* Provider Verification Queue Table */}
+      <div className="bg-surface-card border border-surface-border rounded-2xl p-6 space-y-4 shadow-subtle">
+        <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+          <div>
+            <h2 className="text-base font-bold text-on-surface flex items-center gap-2">
+              <FileCheck2 size={18} className="text-indigo-400" />
+              <span>Pending Institutional Verification Queue</span>
+            </h2>
+            <p className="text-xs text-on-surface-variant">
+              Review state pharmacy license and NPI registry records before granting seller privileges.
+            </p>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-surface-subtle text-on-surface-variant border-b border-surface-border">
+              <tr>
+                <th className="p-3 font-semibold">Institution Name</th>
+                <th className="p-3 font-semibold">NPI / License #</th>
+                <th className="p-3 font-semibold">Facility Type</th>
+                <th className="p-3 font-semibold">Jurisdiction</th>
+                <th className="p-3 font-semibold">Submission Date</th>
+                <th className="p-3 font-semibold text-right">Verification Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-surface-border">
+              {verifications.map((v) => (
+                <tr key={v.id} className="hover:bg-surface-hover/50 transition-colors">
+                  <td className="p-3 font-semibold text-on-surface">{v.facility}</td>
+                  <td className="p-3 text-sky-400 font-medium">{v.npi}</td>
+                  <td className="p-3 text-on-surface-variant">{v.type}</td>
+                  <td className="p-3 text-on-surface-variant">{v.state}</td>
+                  <td className="p-3 text-on-surface-variant">{v.appliedDate}</td>
+                  <td className="p-3 text-right">
+                    {v.status === "APPROVED" ? (
+                      <Badge variant="success" size="sm">✓ Approved</Badge>
+                    ) : v.status === "REJECTED" ? (
+                      <Badge variant="danger" size="sm">✗ Rejected</Badge>
+                    ) : (
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          size="sm"
+                          variant="soft"
+                          onClick={() => handleApprove(v.id)}
+                          className="text-xs text-emerald-400 border-emerald-500/30"
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleReject(v.id)}
+                          className="text-xs text-rose-400 hover:text-rose-300"
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

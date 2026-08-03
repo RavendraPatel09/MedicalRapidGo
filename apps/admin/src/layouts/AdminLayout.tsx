@@ -1,45 +1,62 @@
-import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Users, Activity, ShieldAlert, FileText, Settings, LogOut } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Outlet, Link, useLocation } from "react-router-dom";
+import {
+  Activity,
+  Users,
+  ShieldCheck,
+  FileCheck,
+  Settings,
+  ExternalLink,
+  ShieldAlert,
+  Lock,
+} from "lucide-react";
 
 export default function AdminLayout() {
   return (
-    <div className="flex min-h-screen bg-background text-white font-sans selection:bg-accent-purple selection:text-white">
+    <div className="flex min-h-screen bg-background text-on-background font-sans selection:bg-indigo-500/20">
       {/* Sidebar */}
-      <motion.aside 
-        initial={{ x: -300 }}
-        animate={{ x: 0 }}
-        className="w-64 border-r border-white/10 bg-surface/50 backdrop-blur-xl flex flex-col p-4"
-      >
-        <div className="mb-8 px-2 pt-2">
-          <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-purple to-pink-400">
-            MediCycle
-          </h2>
-          <p className="text-xs text-gray-400">Admin Portal</p>
+      <aside className="w-64 border-r border-surface-border bg-surface flex flex-col p-4">
+        <div className="mb-8 px-2 pt-2 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                <ShieldCheck size={18} />
+              </div>
+              <h2 className="text-lg font-bold text-on-surface">MediCycle</h2>
+            </div>
+            <p className="text-xs text-on-surface-variant mt-0.5">Admin & Compliance Ops</p>
+          </div>
         </div>
-        
-        <nav className="flex-1 space-y-2">
-          <SidebarLink to="/admin" icon={<Activity size={18} />} label="Overview" />
-          <SidebarLink to="/admin/users" icon={<Users size={18} />} label="Users" />
-          <SidebarLink to="/admin/fraud" icon={<ShieldAlert size={18} />} label="Fraud Alerts" />
-          <SidebarLink to="/admin/reports" icon={<FileText size={18} />} label="Reports" />
-          <SidebarLink to="/admin/settings" icon={<Settings size={18} />} label="Settings" />
+
+        <nav className="flex-1 space-y-1.5">
+          <SidebarLink to="/admin" icon={<Activity size={17} />} label="Overview & Health" />
+          <SidebarLink to="/admin/verification" icon={<FileCheck size={17} />} label="Pharmacy Verification" />
+          <SidebarLink to="/admin/escrow" icon={<Lock size={17} />} label="Escrow Settlements" />
+          <SidebarLink to="/admin/alerts" icon={<ShieldAlert size={17} />} label="Cold-Chain Alerts" />
+          <SidebarLink to="/admin/users" icon={<Users size={17} />} label="Institutions Directory" />
         </nav>
-        
-        <div className="mt-auto border-t border-white/10 pt-4">
-          <SidebarLink to="/logout" icon={<LogOut size={18} />} label="Logout" />
+
+        <div className="mt-auto border-t border-surface-border pt-4 space-y-2">
+          <a
+            href="http://localhost:5175"
+            className="flex items-center gap-2 text-xs text-on-surface-variant hover:text-on-surface px-3 py-2 rounded-lg hover:bg-surface-hover transition-colors"
+          >
+            <ExternalLink size={14} className="text-primary-light" />
+            <span>Buyer Marketplace</span>
+          </a>
+          <a
+            href="http://localhost:5177"
+            className="flex items-center gap-2 text-xs text-on-surface-variant hover:text-on-surface px-3 py-2 rounded-lg hover:bg-surface-hover transition-colors"
+          >
+            <ExternalLink size={14} className="text-emerald-400" />
+            <span>Seller Hub</span>
+          </a>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto">
-        {/* Top Navbar / Header Area (Optional spacing) */}
-        <div className="p-8 pb-0 max-w-6xl mx-auto flex items-center justify-end">
-           {/* Add Top Navbar contents here if needed later */}
-        </div>
-        
-        <div className="p-8 pt-0">
+        <div className="p-6 md:p-8 max-w-6xl mx-auto">
           <Outlet />
         </div>
       </main>
@@ -47,19 +64,20 @@ export default function AdminLayout() {
   );
 }
 
-function SidebarLink({ to, icon, label }: { to: string, icon: any, label: string }) {
+function SidebarLink({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) {
   const location = useLocation();
-  // Exact match for the overview, prefix match for others to keep active state
-  const isActive = location.pathname === to || (to !== '/admin' && location.pathname.startsWith(to));
-  
+  const isActive = location.pathname === to || (to !== "/admin" && location.pathname.startsWith(to));
+
   return (
-    <Link 
-      to={to} 
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-        isActive ? 'bg-accent-purple/20 text-accent-purple' : 'text-gray-400 hover:text-white hover:bg-white/5'
+    <Link
+      to={to}
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors ${
+        isActive
+          ? "bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/25"
+          : "text-on-surface-variant hover:text-on-surface hover:bg-surface-hover"
       }`}
     >
-      {icon} <span className="font-medium">{label}</span>
+      {icon} <span>{label}</span>
     </Link>
   );
 }
