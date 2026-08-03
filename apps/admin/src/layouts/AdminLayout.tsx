@@ -64,7 +64,7 @@ export default function AdminLayout() {
   );
 }
 
-function SidebarLink({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) {
+function SidebarLink({ to, icon, label }: { to: string; icon: any; label: string }) {
   const location = useLocation();
   const isActive = location.pathname === to || (to !== "/admin" && location.pathname.startsWith(to));
 
